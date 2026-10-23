@@ -310,6 +310,23 @@ document.getElementById("oda-olustur").addEventListener("click", async () => {
     alert("Oda oluşturulamadı: " + error.message);
   } else {
     alert("🎉 Yeni oda kodun: " + data);
+    
+const odaKoduAlani = document.querySelector(
+  "[data-oda-kodu]"
+);
+
+if (odaKoduAlani) {
+  
+const kodYazisi = Array.from(odaKoduAlani.childNodes)
+  .find(node => node.nodeType === 3 &&
+    node.textContent.includes("Oda Kodu"));
+
+if (kodYazisi) {
+  kodYazisi.textContent = "🎟️ Oda Kodu: " + data + " ";
+}
+
+}
+
     console.log("Yeni oda kodu:", data);
   }
 });
