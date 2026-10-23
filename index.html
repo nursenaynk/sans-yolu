@@ -200,6 +200,13 @@ console.log("Supabase bağlantısı hazır!");
   text-align: center;
 ">
   <h3>🎀 Odadaki Oyuncular</h3>
+  
+
+<p data-oda-kodu style="font-weight: bold; color: #db2777;">
+
+  🎟️ Test Oda Kodu: 751838
+</p>
+
   <p>Oyuncular yükleniyor...</p>
 </div>
 
@@ -218,7 +225,16 @@ async function oyunculariGoster() {
   }
 
   const baslik = kutu.querySelector("h3");
-  kutu.replaceChildren(baslik);
+  
+const odaKoduYazisi = kutu.querySelector(
+  'p[data-oda-kodu]'
+);
+
+kutu.replaceChildren(
+  baslik,
+  ...(odaKoduYazisi ? [odaKoduYazisi] : [])
+);
+
 
   if (!data.length) {
     const mesaj = document.createElement("p");
