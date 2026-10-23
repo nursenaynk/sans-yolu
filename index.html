@@ -216,7 +216,9 @@ console.log("Supabase bağlantısı hazır!");
   🎟️ Test Oda Kodu: 751838
   
 <button type="button"
-  onclick="navigator.clipboard.writeText('751838').then(() => alert('Oda kodu kopyalandı! 💗'))"
+  
+onclick="navigator.clipboard.writeText(document.querySelector('[data-oda-kodu]').textContent.match(/\b\d{6}\b/)[0]).then(() => alert('Oda kodu kopyalandı! 💗'))"
+
   style="background:#f9a8d4; border:0; border-radius:12px; padding:8px 14px; cursor:pointer;">
   📋 Kodu Kopyala
 </button>
