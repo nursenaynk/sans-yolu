@@ -369,7 +369,7 @@ document.getElementById("odaya-katil").addEventListener("click", async () => {
   const { data, error } = await db.rpc("join_game_room", {
     p_room_code: kod.trim(),
     p_player_name: isim.trim(),
-    p_pawn_color: "blue"
+    p_pawn_color: "yellow"
   });
 
   if (error) {
