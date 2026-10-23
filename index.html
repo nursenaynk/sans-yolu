@@ -342,6 +342,38 @@ if (kodYazisi) {
   }
 });
 
+const piyonRenkleri = {
+  "kırmızı": "red",
+  "mavi": "blue",
+  "yeşil": "green",
+  "sarı": "yellow",
+  "mor": "purple",
+  "pembe": "pink"
+};
+
+async function bosRenkleriBul(odaKodu) {
+  const { data, error } = await db
+    .from("game_rooms")
+    .select("id")
+    .eq("room_code", odaKodu)
+    .maybeSingle();
+
+  if (error || !data) return null;
+
+  const sonuc = await db
+    .from("game_players")
+    .select("pawn_color")
+    .eq("room_id", data.id);
+
+  if (sonuc.error) return null;
+
+  const doluRenkler = sonuc.data.map(o => o.pawn_color);
+
+  return Object.keys(piyonRenkleri).filter(
+    renk => !doluRenkler.includes(piyonRenkleri[renk])
+  );
+}
+
 document.getElementById("odaya-katil").addEventListener("click", async () => {
   const kod = prompt("6 haneli oda kodunu gir 🎟️");
   if (kod === null) return;
@@ -365,6 +397,20 @@ document.getElementById("odaya-katil").addEventListener("click", async () => {
       return;
     }
   }
+
+const bosRenkler = await bosRenkleriBul(kod.trim());
+
+if (bosRenkler === null) {
+  alert("Odanın boş renkleri alınamadı.");
+  return;
+}
+
+if (bosRenkler.length === 0) {
+  alert("Bu odada boş renk kalmadı.");
+  return;
+}
+
+alert("Boş renkler: " + bosRenkler.join(", "));
 
   const { data, error } = await db.rpc("join_game_room", {
     p_room_code: kod.trim(),
