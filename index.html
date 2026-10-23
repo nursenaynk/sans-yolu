@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Şans Yolu 🎲</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff4dc;
+  color: #392b4c;
+  text-align: center;
+}
+header {
+  background: #7653b5;
+  color: white;
+  padding: 22px 12px;
+}
+h1 { margin: 0 0 8px; }
+main {
+  max-width: 650px;
+  margin: auto;
+  padding: 18px;
+}
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  margin: 22px 0;
+}
+.cell {
+  aspect-ratio: 1;
+  border: 3px solid #392b4c;
+  border-radius: 13px;
+  background: #ffce63;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(18px, 5vw, 32px);
+}
+.cell:nth-child(4n+2) { background: #ff9eae; }
+.cell:nth-child(4n+3) { background: #9ee4d0; }
+.cell:nth-child(4n+4) { background: #c8b5fa; }
+.cell.active {
+  outline: 4px solid #ff763b;
+  outline-offset: -5px;
+}
+.number { font-size: 12px; font-weight: bold; }
+.panel {
+  background: white;
+  padding: 20px;
+  border-radius: 20px;
+  box-shadow: 0 5px 15px #392b4c22;
+}
+.dice { font-size: 65px; margin: 10px; }
+button {
+  background: #7653b5;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 15px 28px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:disabled { opacity: .5; }
+#message { min-height: 45px; font-weight: bold; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🎲 ŞANS YOLU 🎲</h1>
+  <div>At zarını, dene şansını!</div>
+</header>
+
+<main>
+  <h2>🏆 Bitişe ilk ulaşan kazanır!</h2>
+  <div class="board" id="board"></div>
+
+  <div class="panel">
+    <h3>👑 Oyuncu 1</h3>
+    <p>Bulunduğun kutu: <b id="position">1</b></p>
+    <div class="dice" id="dice">⚀</div>
+    <button id="roll" onclick="rollDice()">🎲 Zar At!</button>
+    <p id="message">Macera başlıyor!</p>
+    <button onclick="restart()">Yeniden Başlat</button>
+  </div>
+</main>
+
+<script>
+const icons = [
+  "🏁","⭐","🎁","🍀","⚡",
+  "💎","❓","🌈","🎲","🎁",
+  "🌸","⭐","⚡","🍀","💎",
+  "🎁","🌈","❓","⭐","🏆"
+];
+
+let position = 0;
+let finished = false;
+
+function drawBoard() {
+  const board = document.getElementById("board");
+  board.innerHTML = "";
+
+  icons.forEach((icon, index) => {
+    const cell = document.createElement("div");
+    cell.className = "cell" +
+      (index === position ? " active" : "");
+
+    const number = document.createElement("span");
+    number.className = "number";
+    number.textContent = index + 1;
+
+    const symbol = document.createElement("span");
+    symbol.textContent =
+      index === position ? "👑" : icon;
+
+    cell.append(number, symbol);
+    board.appendChild(cell);
+  });
+
+  document.getElementById("position").textContent =
+    position + 1;
+}
+
+function rollDice() {
+  if (finished) return;
+
+  const dice = Math.floor(Math.random() * 6) + 1;
+  const faces = ["⚀","⚁","⚂","⚃","⚄","⚅"];
+  document.getElementById("dice").textContent =
+    faces[dice - 1];
+
+  position = Math.min(19, position + dice);
+  let message = "🎲 " + dice + " adım ilerledin!";
+
+  if (position === 19) {
+    finished = true;
+    message = "🏆 Tebrikler! Oyunu kazandın!";
+    document.getElementById("roll").disabled = true;
+  } else if (icons[position] === "⚡") {
+    position = Math.max(0, position - 2);
+    message = "⚡ Tuzak! 2 kutu geri gittin!";
+  } else if (icons[position] === "🎁") {
+    position = Math.min(19, position + 1);
+    message = "🎁 Sürpriz! 1 kutu ilerledin!";
+  }
+
+  if (position === 19) {
+    finished = true;
+    message = "🏆 Tebrikler! Oyunu kazandın!";
+    document.getElementById("roll").disabled = true;
+  }
+
+  document.getElementById("message").textContent =
+    message;
+  drawBoard();
+}
+
+function restart() {
+  position = 0;
+  finished = false;
+  document.getElementById("roll").disabled = false;
+  document.getElementById("dice").textContent = "⚀";
+  document.getElementById("message").textContent =
+    "Macera başlıyor!";
+  drawBoard();
+}
+
+drawBoard();
+</script>
+</body>
+</html>
