@@ -180,6 +180,14 @@ drawBoard();
 <script>
   const SUPABASE_URL = "https://grejyxtuuhqtdxneqrch.supabase.co";
   const SUPABASE_KEY = "sb_publishable_hhAy9_4qvjSSrPeipvOk_w__SCnt8Iw";
+  
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+console.log("Supabase bağlantısı hazır!");
+
 </script>
 
 
