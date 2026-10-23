@@ -284,6 +284,36 @@ db.auth.getSession().then(({ data }) => {
   }
 });
   
+document.getElementById("oda-olustur").addEventListener("click", async () => {
+  const isim = prompt("Oyuncu adın ne olsun? 💗");
+
+  if (!isim || !isim.trim()) return;
+
+  const { data: oturum } = await db.auth.getSession();
+
+  if (!oturum.session) {
+    const { error: girisHatasi } =
+      await db.auth.signInAnonymously();
+
+    if (girisHatasi) {
+      alert("Giriş yapılamadı: " + girisHatasi.message);
+      return;
+    }
+  }
+
+  const { data, error } = await db.rpc("create_game_room", {
+    p_player_name: isim.trim(),
+    p_pawn_color: "pink"
+  });
+
+  if (error) {
+    alert("Oda oluşturulamadı: " + error.message);
+  } else {
+    alert("🎉 Yeni oda kodun: " + data);
+    console.log("Yeni oda kodu:", data);
+  }
+});
+
 </script>
 
 
