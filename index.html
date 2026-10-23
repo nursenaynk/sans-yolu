@@ -203,6 +203,49 @@ console.log("Supabase bağlantısı hazır!");
   <p>Oyuncular yükleniyor...</p>
 </div>
 
+<script>
+async function oyunculariGoster() {
+  const kutu = document.getElementById("oyuncu-listesi");
+
+  const { data, error } = await db
+    .from("game_players")
+    .select("player_name, pawn_color, turn_order")
+    .order("turn_order");
+
+  if (error) {
+    console.error("Oyuncular yüklenemedi:", error.message);
+    return;
+  }
+
+  const baslik = kutu.querySelector("h3");
+  kutu.replaceChildren(baslik);
+
+  if (!data.length) {
+    const mesaj = document.createElement("p");
+    mesaj.textContent = "Henüz oyuncu bulunamadı.";
+    kutu.appendChild(mesaj);
+    return;
+  }
+
+  const renkler = {
+    red: "❤️", blue: "💙", green: "💚",
+    yellow: "💛", purple: "💜", pink: "🩷"
+  };
+
+  data.forEach(oyuncu => {
+    const satir = document.createElement("p");
+    satir.textContent =
+      (renkler[oyuncu.pawn_color] || "🎲") +
+      " " + oyuncu.player_name;
+    kutu.appendChild(satir);
+  });
+}
+
+db.auth.getSession().then(({ data }) => {
+  if (data.session) oyunculariGoster();
+});
+</script>
+
 
 </body>
 </html>
