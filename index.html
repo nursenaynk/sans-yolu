@@ -241,9 +241,17 @@ async function oyunculariGoster() {
   });
 }
 
+
 db.auth.getSession().then(({ data }) => {
-  if (data.session) oyunculariGoster();
+  if (data.session) {
+    oyunculariGoster();
+
+    setInterval(() => {
+      oyunculariGoster();
+    }, 3000);
+  }
 });
+  
 </script>
 
 
