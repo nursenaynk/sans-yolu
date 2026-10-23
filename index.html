@@ -370,10 +370,19 @@ document.getElementById("odaya-katil").addEventListener("click", async () => {
     p_room_code: kod.trim(),
     p_player_name: isim.trim(),
     
-p_pawn_color: prompt(
-  "Piyon rengini seç 💗\nred, blue, green, yellow, purple, pink",
-  "purple"
-)?.trim().toLowerCase()
+
+p_pawn_color: ({
+  "kırmızı": "red",
+  "mavi": "blue",
+  "yeşil": "green",
+  "sarı": "yellow",
+  "mor": "purple",
+  "pembe": "pink"
+})[prompt(
+  "Piyon rengini seç 🌈\nKırmızı, Mavi, Yeşil, Sarı, Mor, Pembe",
+  "mor"
+)?.trim().toLocaleLowerCase("tr-TR")]
+
 
   });
 
