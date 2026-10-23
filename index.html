@@ -342,6 +342,44 @@ if (kodYazisi) {
   }
 });
 
+document.getElementById("odaya-katil").addEventListener("click", async () => {
+  const kod = prompt("6 haneli oda kodunu gir 🎟️");
+  if (kod === null) return;
+
+  if (!/^\d{6}$/.test(kod.trim())) {
+    alert("Lütfen 6 haneli oda kodu gir.");
+    return;
+  }
+
+  const isim = prompt("Oyuncu adın ne olsun? 💗");
+  if (!isim || !isim.trim()) return;
+
+  const { data: oturum } = await db.auth.getSession();
+
+  if (!oturum.session) {
+    const { error: girisHatasi } =
+      await db.auth.signInAnonymously();
+
+    if (girisHatasi) {
+      alert("Giriş hatası: " + girisHatasi.message);
+      return;
+    }
+  }
+
+  const { data, error } = await db.rpc("join_game_room", {
+    p_room_code: kod.trim(),
+    p_player_name: isim.trim(),
+    p_pawn_color: "blue"
+  });
+
+  if (error) {
+    alert("Odaya katılamadın: " + error.message);
+  } else {
+    alert("🎉 Odaya başarıyla katıldın! Kod: " + data);
+    oyunculariGoster();
+  }
+});
+
 </script>
 
 
